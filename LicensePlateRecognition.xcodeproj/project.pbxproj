@@ -14,9 +14,10 @@
 		04C4E5E02516482D00A2BD8F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04C4E5DE2516482D00A2BD8F /* LaunchScreen.storyboard */; };
 		04C4E5EB2516482D00A2BD8F /* LicensePlateRecognitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C4E5EA2516482D00A2BD8F /* LicensePlateRecognitionTests.swift */; };
 		04CE18B92516494C00D9CA4E /* AVCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */; };
-		04CE18BB25164BC700D9CA4E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18BA25164BC700D9CA4E /* Helpers.swift */; };
+		04CE18BB25164BC700D9CA4E /* OrientationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18BA25164BC700D9CA4E /* OrientationExtensions.swift */; };
 		04CE18BD2516509800D9CA4E /* LicensePlateDetector.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18BC2516509800D9CA4E /* LicensePlateDetector.mlmodel */; };
 		04CE18BF251652FE00D9CA4E /* LPRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18BE251652FE00D9CA4E /* LPRViewController.swift */; };
+		04CE18C325166FA500D9CA4E /* LPRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C225166FA500D9CA4E /* LPRView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,9 +42,10 @@
 		04C4E5EA2516482D00A2BD8F /* LicensePlateRecognitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensePlateRecognitionTests.swift; sourceTree = "<group>"; };
 		04C4E5EC2516482D00A2BD8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureViewController.swift; sourceTree = "<group>"; };
-		04CE18BA25164BC700D9CA4E /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		04CE18BA25164BC700D9CA4E /* OrientationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationExtensions.swift; sourceTree = "<group>"; };
 		04CE18BC2516509800D9CA4E /* LicensePlateDetector.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = LicensePlateDetector.mlmodel; sourceTree = "<group>"; };
 		04CE18BE251652FE00D9CA4E /* LPRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LPRViewController.swift; sourceTree = "<group>"; };
+		04CE18C225166FA500D9CA4E /* LPRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LPRView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +91,8 @@
 				04C4E5D52516482A00A2BD8F /* SceneDelegate.swift */,
 				04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */,
 				04CE18BE251652FE00D9CA4E /* LPRViewController.swift */,
-				04CE18BA25164BC700D9CA4E /* Helpers.swift */,
+				04CE18C225166FA500D9CA4E /* LPRView.swift */,
+				04CE18BA25164BC700D9CA4E /* OrientationExtensions.swift */,
 				04C4E5D92516482A00A2BD8F /* Main.storyboard */,
 				04CE18BC2516509800D9CA4E /* LicensePlateDetector.mlmodel */,
 				04C4E5DC2516482D00A2BD8F /* Assets.xcassets */,
@@ -211,9 +214,10 @@
 			files = (
 				04CE18BD2516509800D9CA4E /* LicensePlateDetector.mlmodel in Sources */,
 				04C4E5D42516482A00A2BD8F /* AppDelegate.swift in Sources */,
+				04CE18C325166FA500D9CA4E /* LPRView.swift in Sources */,
 				04CE18BF251652FE00D9CA4E /* LPRViewController.swift in Sources */,
 				04CE18B92516494C00D9CA4E /* AVCaptureViewController.swift in Sources */,
-				04CE18BB25164BC700D9CA4E /* Helpers.swift in Sources */,
+				04CE18BB25164BC700D9CA4E /* OrientationExtensions.swift in Sources */,
 				04C4E5D62516482A00A2BD8F /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
