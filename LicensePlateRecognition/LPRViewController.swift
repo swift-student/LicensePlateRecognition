@@ -10,31 +10,136 @@ import UIKit
 import AVFoundation
 import Vision
 
-class LPRViewController: AVCaptureViewController {
+class LPRViewController: UIViewController {
+    
+    // MARK: - Public Properties
+    
+    var bufferSize: CGSize = .zero
     
     // MARK: - Private Properties
-    private var detectionOverlay: CALayer! = nil
     
-    // Vision parts
+    @IBOutlet private var lprView: LPRView!
+    
+    private let captureSession = AVCaptureSession()
+    private let videoDataOutput = AVCaptureVideoDataOutput()
+    private let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutput", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
+    
     private var requests = [VNRequest]()
     
-    // MARK: - Overrides
+    // MARK: - View Lifecycle
     
-    override func setupAVCapture() {
-        super.setupAVCapture()
-        
-        // setup Vision parts
-//        setupLayers()
-//        updateLayerGeometry()
-        setupVision()
-        
-        // start the capture
-        startCaptureSession()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUp()
     }
     
-    override func captureOutput(_ output: AVCaptureOutput,
-                                didOutput sampleBuffer: CMSampleBuffer,
-                                from connection: AVCaptureConnection) {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        captureSession.startRunning()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        captureSession.stopRunning()
+    }
+    
+    private func setUp() {
+        lprView.videoPlayerView.videoGravity = .resizeAspectFill
+        setUpAVCapture()
+        setUpVision()
+    }
+    
+    private func setUpAVCapture() {
+        var deviceInput: AVCaptureDeviceInput!
+        
+        // Select a video device, make an input
+        let videoDevice = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .back).devices.first
+        do {
+            deviceInput = try AVCaptureDeviceInput(device: videoDevice!)
+        } catch {
+            print("Could not create video device input: \(error)")
+            return
+        }
+        
+        captureSession.beginConfiguration()
+        
+        captureSession.sessionPreset = .vga640x480 // Model image size is smaller.
+        
+        // Add a video input
+        guard captureSession.canAddInput(deviceInput) else {
+            print("Could not add video device input to the session")
+            captureSession.commitConfiguration()
+            return
+        }
+        captureSession.addInput(deviceInput)
+        
+        // Add video output
+        if captureSession.canAddOutput(videoDataOutput) {
+            captureSession.addOutput(videoDataOutput)
+            // Add a video data output
+            videoDataOutput.alwaysDiscardsLateVideoFrames = true
+            videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)]
+            videoDataOutput.setSampleBufferDelegate(self, queue: videoDataOutputQueue)
+        } else {
+            print("Could not add video data output to the session")
+            captureSession.commitConfiguration()
+            return
+        }
+        
+        let captureConnection = videoDataOutput.connection(with: .video)
+        // Always process the frames
+        captureConnection?.isEnabled = true
+        
+        do {
+            try  videoDevice!.lockForConfiguration()
+            let dimensions = CMVideoFormatDescriptionGetDimensions((videoDevice?.activeFormat.formatDescription)!)
+            bufferSize.width = CGFloat(dimensions.width)
+            bufferSize.height = CGFloat(dimensions.height)
+            videoDevice!.unlockForConfiguration()
+        } catch {
+            print(error)
+        }
+        
+        captureSession.commitConfiguration()
+        lprView.session = captureSession
+    }
+    
+    @discardableResult
+    private func setUpVision() -> NSError? {
+        let error: NSError! = nil
+        
+        do {
+            let visionModel = try VNCoreMLModel(for: LicensePlateDetector().model)
+            let objectRecognition = VNCoreMLRequest(model: visionModel, completionHandler: { (request, error) in
+                DispatchQueue.main.async(execute: {
+                    // perform all the UI updates on the main queue
+                    if let results = request.results {
+                        // TODO:
+                        // Get license plate bounding box
+                        // Take photo, perform text analysis within bounding box
+                        // Overlay bounding box rect on lp using view
+                        
+                        if let first = results.first as? VNRecognizedObjectObservation {
+                            print(first.labels.first ?? "")
+                        }
+                    }
+                })
+            })
+            self.requests = [objectRecognition]
+        } catch let error as NSError {
+            print("Model loading went wrong: \(error)")
+        }
+        
+        return error
+    }
+}
+
+// MARK: - Video Data Output Delegate
+
+extension LPRViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
+    func captureOutput(_ output: AVCaptureOutput,
+                       didOutput sampleBuffer: CMSampleBuffer,
+                       from connection: AVCaptureConnection) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
@@ -49,116 +154,9 @@ class LPRViewController: AVCaptureViewController {
         }
     }
     
-    // MARK: - Private Methods
-    
-    @discardableResult
-    private func setupVision() -> NSError? {
-        // Setup Vision parts
-        let error: NSError! = nil
-        
-        do {
-            let visionModel = try VNCoreMLModel(for: LicensePlateDetector().model)
-            let objectRecognition = VNCoreMLRequest(model: visionModel, completionHandler: { (request, error) in
-                DispatchQueue.main.async(execute: {
-                    // perform all the UI updates on the main queue
-                    if let results = request.results {
-//                        self.drawVisionRequestResults(results)
-                    }
-                })
-            })
-            self.requests = [objectRecognition]
-        } catch let error as NSError {
-            print("Model loading went wrong: \(error)")
-        }
-        
-        return error
-    }
-    
-    // Drawing
-    
-    private func drawVisionRequestResults(_ results: [Any]) {
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        detectionOverlay.sublayers = nil // remove all the old recognized objects
-        for observation in results where observation is VNRecognizedObjectObservation {
-            guard let objectObservation = observation as? VNRecognizedObjectObservation else {
-                continue
-            }
-            // Select only the label with the highest confidence.
-            let topLabelObservation = objectObservation.labels[0]
-            let objectBounds = VNImageRectForNormalizedRect(objectObservation.boundingBox, Int(bufferSize.width), Int(bufferSize.height))
-            
-            let shapeLayer = self.createRoundedRectLayerWithBounds(objectBounds)
-            
-            let textLayer = self.createTextSubLayerInBounds(objectBounds,
-                                                            identifier: topLabelObservation.identifier,
-                                                            confidence: topLabelObservation.confidence)
-            shapeLayer.addSublayer(textLayer)
-            detectionOverlay.addSublayer(shapeLayer)
-        }
-        self.updateLayerGeometry()
-        CATransaction.commit()
-    }
-    
-    private func setupLayers() {
-        detectionOverlay = CALayer() // container layer that has all the renderings of the observations
-        detectionOverlay.name = "DetectionOverlay"
-        detectionOverlay.bounds = CGRect(x: 0.0,
-                                         y: 0.0,
-                                         width: bufferSize.width,
-                                         height: bufferSize.height)
-        detectionOverlay.position = CGPoint(x: rootLayer.bounds.midX, y: rootLayer.bounds.midY)
-        rootLayer.addSublayer(detectionOverlay)
-    }
-    
-    private func updateLayerGeometry() {
-        let bounds = rootLayer.bounds
-        var scale: CGFloat
-        
-        let xScale: CGFloat = bounds.size.width / bufferSize.height
-        let yScale: CGFloat = bounds.size.height / bufferSize.width
-        
-        scale = fmax(xScale, yScale)
-        if scale.isInfinite {
-            scale = 1.0
-        }
-        CATransaction.begin()
-        CATransaction.setValue(kCFBooleanTrue, forKey: kCATransactionDisableActions)
-        
-        // rotate the layer into screen orientation and scale and mirror
-        detectionOverlay.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: scale, y: -scale))
-        // center the layer
-        detectionOverlay.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        
-        CATransaction.commit()
-        
-    }
-    
-    private func createTextSubLayerInBounds(_ bounds: CGRect, identifier: String, confidence: VNConfidence) -> CATextLayer {
-        let textLayer = CATextLayer()
-        textLayer.name = "Object Label"
-        let formattedString = NSMutableAttributedString(string: String(format: "\(identifier)\nConfidence:  %.2f", confidence))
-        let largeFont = UIFont(name: "Helvetica", size: 24.0)!
-        formattedString.addAttributes([NSAttributedString.Key.font: largeFont], range: NSRange(location: 0, length: identifier.count))
-        textLayer.string = formattedString
-        textLayer.bounds = CGRect(x: 0, y: 0, width: bounds.size.height - 10, height: bounds.size.width - 10)
-        textLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        textLayer.shadowOpacity = 0.7
-        textLayer.shadowOffset = CGSize(width: 2, height: 2)
-        textLayer.foregroundColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [0.0, 0.0, 0.0, 1.0])
-        textLayer.contentsScale = 2.0 // retina rendering
-        // rotate the layer into screen orientation and scale and mirror
-        textLayer.setAffineTransform(CGAffineTransform(rotationAngle: CGFloat(.pi / 2.0)).scaledBy(x: 1.0, y: -1.0))
-        return textLayer
-    }
-    
-    private func createRoundedRectLayerWithBounds(_ bounds: CGRect) -> CALayer {
-        let shapeLayer = CALayer()
-        shapeLayer.bounds = bounds
-        shapeLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
-        shapeLayer.name = "Found Object"
-        shapeLayer.backgroundColor = CGColor(colorSpace: CGColorSpaceCreateDeviceRGB(), components: [1.0, 1.0, 0.2, 0.4])
-        shapeLayer.cornerRadius = 7
-        return shapeLayer
+    func captureOutput(_ captureOutput: AVCaptureOutput,
+                       didDrop didDropSampleBuffer: CMSampleBuffer,
+                       from connection: AVCaptureConnection) {
+        // print("frame dropped")
     }
 }
