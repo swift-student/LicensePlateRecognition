@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		04C4E5D42516482A00A2BD8F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C4E5D32516482A00A2BD8F /* AppDelegate.swift */; };
 		04C4E5D62516482A00A2BD8F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C4E5D52516482A00A2BD8F /* SceneDelegate.swift */; };
-		04C4E5D82516482A00A2BD8F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C4E5D72516482A00A2BD8F /* ViewController.swift */; };
 		04C4E5DB2516482A00A2BD8F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04C4E5D92516482A00A2BD8F /* Main.storyboard */; };
 		04C4E5DD2516482D00A2BD8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04C4E5DC2516482D00A2BD8F /* Assets.xcassets */; };
 		04C4E5E02516482D00A2BD8F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04C4E5DE2516482D00A2BD8F /* LaunchScreen.storyboard */; };
@@ -17,6 +16,7 @@
 		04CE18B92516494C00D9CA4E /* AVCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */; };
 		04CE18BB25164BC700D9CA4E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18BA25164BC700D9CA4E /* Helpers.swift */; };
 		04CE18BD2516509800D9CA4E /* LicensePlateDetector.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18BC2516509800D9CA4E /* LicensePlateDetector.mlmodel */; };
+		04CE18BF251652FE00D9CA4E /* LPRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18BE251652FE00D9CA4E /* LPRViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,7 +33,6 @@
 		04C4E5D02516482A00A2BD8F /* LicensePlateRecognition.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LicensePlateRecognition.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04C4E5D32516482A00A2BD8F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04C4E5D52516482A00A2BD8F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		04C4E5D72516482A00A2BD8F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		04C4E5DA2516482A00A2BD8F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		04C4E5DC2516482D00A2BD8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04C4E5DF2516482D00A2BD8F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -44,6 +43,7 @@
 		04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureViewController.swift; sourceTree = "<group>"; };
 		04CE18BA25164BC700D9CA4E /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		04CE18BC2516509800D9CA4E /* LicensePlateDetector.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = LicensePlateDetector.mlmodel; sourceTree = "<group>"; };
+		04CE18BE251652FE00D9CA4E /* LPRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LPRViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,8 +87,8 @@
 			children = (
 				04C4E5D32516482A00A2BD8F /* AppDelegate.swift */,
 				04C4E5D52516482A00A2BD8F /* SceneDelegate.swift */,
-				04C4E5D72516482A00A2BD8F /* ViewController.swift */,
 				04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */,
+				04CE18BE251652FE00D9CA4E /* LPRViewController.swift */,
 				04CE18BA25164BC700D9CA4E /* Helpers.swift */,
 				04C4E5D92516482A00A2BD8F /* Main.storyboard */,
 				04CE18BC2516509800D9CA4E /* LicensePlateDetector.mlmodel */,
@@ -209,9 +209,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04C4E5D82516482A00A2BD8F /* ViewController.swift in Sources */,
 				04CE18BD2516509800D9CA4E /* LicensePlateDetector.mlmodel in Sources */,
 				04C4E5D42516482A00A2BD8F /* AppDelegate.swift in Sources */,
+				04CE18BF251652FE00D9CA4E /* LPRViewController.swift in Sources */,
 				04CE18B92516494C00D9CA4E /* AVCaptureViewController.swift in Sources */,
 				04CE18BB25164BC700D9CA4E /* Helpers.swift in Sources */,
 				04C4E5D62516482A00A2BD8F /* SceneDelegate.swift in Sources */,
