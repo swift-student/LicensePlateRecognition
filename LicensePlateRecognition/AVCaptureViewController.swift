@@ -18,7 +18,9 @@ class AVCaptureViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    @IBOutlet weak private var previewView: UIView!
+    @IBOutlet private var lprView: LPRView!
+    
+    
     private let session = AVCaptureSession()
     private var previewLayer: AVCaptureVideoPreviewLayer! = nil
     private let videoDataOutput = AVCaptureVideoDataOutput()
@@ -32,6 +34,7 @@ class AVCaptureViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupAVCapture()
+        lprView.videoPlayerView.videoGravity = .resizeAspectFill
     }
     
     func setupAVCapture() {
@@ -47,6 +50,7 @@ class AVCaptureViewController: UIViewController {
         }
         
         session.beginConfiguration()
+        
         session.sessionPreset = .vga640x480 // Model image size is smaller.
         
         // Add a video input
@@ -85,11 +89,15 @@ class AVCaptureViewController: UIViewController {
         }
         
         session.commitConfiguration()
-        previewLayer = AVCaptureVideoPreviewLayer(session: session)
-        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        rootLayer = previewView.layer
-        previewLayer.frame = rootLayer.bounds
-        rootLayer.addSublayer(previewLayer)
+        
+        lprView.session = session
+        
+//        previewLayer = AVCaptureVideoPreviewLayer(session: session)
+//        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+//        rootLayer = previewView.layer
+//        previewLayer.frame = rootLayer.bounds
+//        rootLayer.addSublayer(previewLayer)
+        
     }
     
     func startCaptureSession() {

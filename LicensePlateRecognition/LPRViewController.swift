@@ -24,8 +24,8 @@ class LPRViewController: AVCaptureViewController {
         super.setupAVCapture()
         
         // setup Vision parts
-        setupLayers()
-        updateLayerGeometry()
+//        setupLayers()
+//        updateLayerGeometry()
         setupVision()
         
         // start the capture
@@ -62,7 +62,7 @@ class LPRViewController: AVCaptureViewController {
                 DispatchQueue.main.async(execute: {
                     // perform all the UI updates on the main queue
                     if let results = request.results {
-                        self.drawVisionRequestResults(results)
+//                        self.drawVisionRequestResults(results)
                     }
                 })
             })
