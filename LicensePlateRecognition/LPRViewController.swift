@@ -46,7 +46,7 @@ class LPRViewController: UIViewController {
     private func setUp() {
         lprView.videoPlayerView.videoGravity = .resizeAspectFill
         setUpAVCapture()
-        setUpVision()
+        try? setUpVision()
     }
     
     private func setUpAVCapture() {
@@ -90,6 +90,8 @@ class LPRViewController: UIViewController {
         // Always process the frames
         captureConnection?.isEnabled = true
         
+        // Get buffer size to allow for determining recognized license plate positions
+        // relative to the video ouput buffer size
         do {
             try  videoDevice!.lockForConfiguration()
             let dimensions = CMVideoFormatDescriptionGetDimensions((videoDevice?.activeFormat.formatDescription)!)
@@ -104,33 +106,27 @@ class LPRViewController: UIViewController {
         lprView.session = captureSession
     }
     
-    @discardableResult
-    private func setUpVision() -> NSError? {
-        let error: NSError! = nil
+    private func setUpVision() throws {
+        let visionModel = try VNCoreMLModel(for: LicensePlateDetector().model)
         
-        do {
-            let visionModel = try VNCoreMLModel(for: LicensePlateDetector().model)
-            let objectRecognition = VNCoreMLRequest(model: visionModel, completionHandler: { (request, error) in
-                DispatchQueue.main.async(execute: {
-                    // perform all the UI updates on the main queue
-                    if let results = request.results {
-                        // TODO:
-                        // Get license plate bounding box
-                        // Take photo, perform text analysis within bounding box
-                        // Overlay bounding box rect on lp using view
-                        
-                        if let first = results.first as? VNRecognizedObjectObservation {
-                            print(first.labels.first ?? "")
-                        }
-                    }
-                })
-            })
-            self.requests = [objectRecognition]
-        } catch let error as NSError {
-            print("Model loading went wrong: \(error)")
+        let objectRecognition = VNCoreMLRequest(model: visionModel) { request, error in
+            guard let results = request.results else { return }
+            
+            // TODO:
+            // Get license plate bounding box
+            // Take photo, perform text analysis within bounding box
+            
+            DispatchQueue.main.async {
+                // Overlay bounding box rect on lp using view
+            }
+            
+            // Print first result for testing
+            if let first = results.first as? VNRecognizedObjectObservation {
+                print(first.labels.first ?? "")
+            }
         }
         
-        return error
+        self.requests = [objectRecognition]
     }
 }
 
