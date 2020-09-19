@@ -14,6 +14,8 @@
 		04C4E5DD2516482D00A2BD8F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04C4E5DC2516482D00A2BD8F /* Assets.xcassets */; };
 		04C4E5E02516482D00A2BD8F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04C4E5DE2516482D00A2BD8F /* LaunchScreen.storyboard */; };
 		04C4E5EB2516482D00A2BD8F /* LicensePlateRecognitionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C4E5EA2516482D00A2BD8F /* LicensePlateRecognitionTests.swift */; };
+		04CE18B92516494C00D9CA4E /* AVCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */; };
+		04CE18BB25164BC700D9CA4E /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18BA25164BC700D9CA4E /* Helpers.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +40,8 @@
 		04C4E5E62516482D00A2BD8F /* LicensePlateRecognitionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LicensePlateRecognitionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04C4E5EA2516482D00A2BD8F /* LicensePlateRecognitionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensePlateRecognitionTests.swift; sourceTree = "<group>"; };
 		04C4E5EC2516482D00A2BD8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVCaptureViewController.swift; sourceTree = "<group>"; };
+		04CE18BA25164BC700D9CA4E /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +86,8 @@
 				04C4E5D32516482A00A2BD8F /* AppDelegate.swift */,
 				04C4E5D52516482A00A2BD8F /* SceneDelegate.swift */,
 				04C4E5D72516482A00A2BD8F /* ViewController.swift */,
+				04CE18B82516494C00D9CA4E /* AVCaptureViewController.swift */,
+				04CE18BA25164BC700D9CA4E /* Helpers.swift */,
 				04C4E5D92516482A00A2BD8F /* Main.storyboard */,
 				04C4E5DC2516482D00A2BD8F /* Assets.xcassets */,
 				04C4E5DE2516482D00A2BD8F /* LaunchScreen.storyboard */,
@@ -202,6 +208,8 @@
 			files = (
 				04C4E5D82516482A00A2BD8F /* ViewController.swift in Sources */,
 				04C4E5D42516482A00A2BD8F /* AppDelegate.swift in Sources */,
+				04CE18B92516494C00D9CA4E /* AVCaptureViewController.swift in Sources */,
+				04CE18BB25164BC700D9CA4E /* Helpers.swift in Sources */,
 				04C4E5D62516482A00A2BD8F /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
