@@ -121,9 +121,7 @@ class LPRViewController: UIViewController {
     
     private func processResults(_ results: [VNRecognizedObjectObservation]) {
 
-        // TODO:
-        // Get license plate bounding box
-        // Take photo, perform text analysis within bounding box
+        // TODO: Take photo, perform text analysis within bounding box
         
         guard let firstResult = results.first else {
             DispatchQueue.main.async {
