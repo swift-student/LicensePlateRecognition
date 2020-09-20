@@ -6,6 +6,8 @@
 //  Copyright © 2020 Swift Student. All rights reserved.
 //
 
+import AVFoundation
+
 class CapturePhotoOperation: ConcurrentOperation, AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput,
                      didFinishProcessingPhoto photo: AVCapturePhoto,
@@ -17,6 +19,6 @@ class CapturePhotoOperation: ConcurrentOperation, AVCapturePhotoCaptureDelegate 
             return
         }
         
-        print(photo.cgImageRepresentation())
+        print(photo.cgImageRepresentation().debugDescription)
     }
 }
