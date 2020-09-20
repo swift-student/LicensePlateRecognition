@@ -26,6 +26,8 @@ class LPRViewController: UIViewController {
     
     private var requests = [VNRequest]()
     
+    private let licensePlateController = LicensePlateController()
+    
     // MARK: - View Lifecycle
     
     override func viewDidLoad() {
@@ -122,22 +124,17 @@ class LPRViewController: UIViewController {
     private func processResults(_ results: [VNRecognizedObjectObservation]) {
 
         // TODO: Take photo, perform text analysis within bounding box
-        
-        guard let firstResult = results.first else {
-            DispatchQueue.main.async {
-                self.lprView.clearAllPlates()
-            }
-            return
+
+        let rects = results.map {
+            VNImageRectForNormalizedRect($0.boundingBox,
+            Int(bufferSize.width),
+            Int(bufferSize.height))
         }
         
-        let plateRect = VNImageRectForNormalizedRect(firstResult.boundingBox,
-                                                       Int(bufferSize.width),
-                                                       Int(bufferSize.height))
-        
-        let licensePlate = LicensePlate(number: nil, lastRectInBuffer: plateRect)
+        licensePlateController.update(withRects: rects)
         
         DispatchQueue.main.async {
-            self.lprView.showPlate(licensePlate)
+//            self.lprView.addPlate(licensePlate)
         }
     }
 }
