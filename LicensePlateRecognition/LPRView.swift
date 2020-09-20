@@ -101,7 +101,6 @@ class LPRView: UIView {
     // MARK: - Private Methods
     
     private func setUp() {
-        detectionOverlay.frame = .zero
         addSubview(detectionOverlay)
     }
     
@@ -121,7 +120,7 @@ class LPRView: UIView {
             // Expand to fill and reverse y axis (video y is opposite of UI)
             detectionOverlay.transform = .init(scaleX: 1.0 * scale, y: -1.0 * scale)
         } else {
-            // Do the above, scale y to match x and vicr-versa, and rotate 90º
+            // Do the above, scale y to match x and vice-versa, and rotate 90º
             detectionOverlay.transform =
                 CGAffineTransform(
                     scaleX: -1.0 * scale * bufferAspectRatio,
