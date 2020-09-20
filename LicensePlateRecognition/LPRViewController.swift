@@ -23,6 +23,7 @@ class LPRViewController: UIViewController {
     private let captureSession = AVCaptureSession()
     private let videoDataOutput = AVCaptureVideoDataOutput()
     private let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutput", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
+    private let photoOutput = AVCapturePhotoOutput()
     
     private var requests = [VNRequest]()
     
@@ -44,6 +45,8 @@ class LPRViewController: UIViewController {
         super.viewDidDisappear(animated)
         captureSession.stopRunning()
     }
+    
+    // MARK: - Private Methods
     
     private func setUp() {
         lprView.videoPlayerView.videoGravity = .resizeAspectFill
@@ -95,7 +98,7 @@ class LPRViewController: UIViewController {
         // Get buffer size to allow for determining recognized license plate positions
         // relative to the video ouput buffer size
         do {
-            try  videoDevice!.lockForConfiguration()
+            try videoDevice!.lockForConfiguration()
             let dimensions = CMVideoFormatDescriptionGetDimensions((videoDevice?.activeFormat.formatDescription)!)
             bufferSize.width = CGFloat(dimensions.width)
             bufferSize.height = CGFloat(dimensions.height)
@@ -104,6 +107,12 @@ class LPRViewController: UIViewController {
             print(error)
         }
         
+        // Add photo output
+        if captureSession.canAddOutput(photoOutput) {
+            photoOutput.isHighResolutionCaptureEnabled = true
+            captureSession.addOutput(photoOutput)
+        }
+    
         captureSession.commitConfiguration()
     
         lprView.bufferSize = bufferSize
@@ -122,9 +131,6 @@ class LPRViewController: UIViewController {
     }
     
     private func processResults(_ results: [VNRecognizedObjectObservation]) {
-
-        // TODO: Take photo, perform text analysis within bounding box
-
         let rects = results.map {
             VNImageRectForNormalizedRect($0.boundingBox,
             Int(bufferSize.width),
@@ -132,6 +138,10 @@ class LPRViewController: UIViewController {
         }
         
         licensePlateController.update(withRects: rects)
+        
+//        let photoSettings = AVCapturePhotoSettings()
+//        photoSettings.isHighResolutionPhotoEnabled = true
+//        photoOutput.capturePhoto(with: photoSettings, delegate: self)
         
         DispatchQueue.main.async {
             self.lprView.licensePlates = self.licensePlateController.visiblePlates
@@ -163,5 +173,18 @@ extension LPRViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                        didDrop didDropSampleBuffer: CMSampleBuffer,
                        from connection: AVCaptureConnection) {
         // print("frame dropped")
+    }
+}
+
+extension LPRViewController: AVCapturePhotoCaptureDelegate {
+    func photoOutput(_ output: AVCapturePhotoOutput,
+                     didFinishProcessingPhoto photo: AVCapturePhoto,
+                     error: Error?) {
+        if let error = error {
+            print(error)
+            return
+        }
+        
+        print(photo.cgImageRepresentation())
     }
 }
