@@ -19,6 +19,7 @@
 		04CE18C325166FA500D9CA4E /* LPRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C225166FA500D9CA4E /* LPRView.swift */; };
 		04CE18C62516A11500D9CA4E /* LicensePlate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C52516A11500D9CA4E /* LicensePlate.swift */; };
 		04CE18C82516A1AD00D9CA4E /* LicensePlateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C72516A1AD00D9CA4E /* LicensePlateController.swift */; };
+		04CE18CA251716F100D9CA4E /* LicensePlateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C9251716F100D9CA4E /* LicensePlateView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		04CE18C225166FA500D9CA4E /* LPRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LPRView.swift; sourceTree = "<group>"; };
 		04CE18C52516A11500D9CA4E /* LicensePlate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensePlate.swift; sourceTree = "<group>"; };
 		04CE18C72516A1AD00D9CA4E /* LicensePlateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensePlateController.swift; sourceTree = "<group>"; };
+		04CE18C9251716F100D9CA4E /* LicensePlateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensePlateView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +95,7 @@
 				04C4E5D92516482A00A2BD8F /* Main.storyboard */,
 				04CE18BE251652FE00D9CA4E /* LPRViewController.swift */,
 				04CE18C225166FA500D9CA4E /* LPRView.swift */,
+				04CE18C9251716F100D9CA4E /* LicensePlateView.swift */,
 				04CE18C52516A11500D9CA4E /* LicensePlate.swift */,
 				04CE18C72516A1AD00D9CA4E /* LicensePlateController.swift */,
 				04CE18BA25164BC700D9CA4E /* OrientationExtensions.swift */,
@@ -224,6 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04CE18BD2516509800D9CA4E /* LicensePlateDetector.mlmodel in Sources */,
+				04CE18CA251716F100D9CA4E /* LicensePlateView.swift in Sources */,
 				04C4E5D42516482A00A2BD8F /* AppDelegate.swift in Sources */,
 				04CE18C325166FA500D9CA4E /* LPRView.swift in Sources */,
 				04CE18C62516A11500D9CA4E /* LicensePlate.swift in Sources */,
