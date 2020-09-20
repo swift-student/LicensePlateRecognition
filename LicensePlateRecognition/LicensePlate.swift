@@ -9,8 +9,9 @@
 import UIKit
 
 struct LicensePlate {
-    var number: String?
     var lastRectInBuffer: CGRect
+    var number: String?
+    let uuid = UUID()
 }
 
-// make equatable
+extension LicensePlate: Equatable {}
