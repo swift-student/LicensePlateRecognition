@@ -103,30 +103,44 @@ class LPRViewController: UIViewController {
         }
         
         captureSession.commitConfiguration()
+    
+        lprView.bufferSize = bufferSize
         lprView.session = captureSession
     }
     
     private func setUpVision() throws {
         let visionModel = try VNCoreMLModel(for: LicensePlateDetector().model)
         
-        let objectRecognition = VNCoreMLRequest(model: visionModel) { request, error in
-            guard let results = request.results else { return }
-            
-            // TODO:
-            // Get license plate bounding box
-            // Take photo, perform text analysis within bounding box
-            
-            DispatchQueue.main.async {
-                // Overlay bounding box rect on lp using view
-            }
-            
-            // Print first result for testing
-            if let first = results.first as? VNRecognizedObjectObservation {
-                print(first.labels.first ?? "")
-            }
+        let objectRecognition = VNCoreMLRequest(model: visionModel) { [weak self] request, error in
+            guard let results = request.results as? [VNRecognizedObjectObservation] else { return }
+            self?.processResults(results)
         }
         
         self.requests = [objectRecognition]
+    }
+    
+    private func processResults(_ results: [VNRecognizedObjectObservation]) {
+
+        // TODO:
+        // Get license plate bounding box
+        // Take photo, perform text analysis within bounding box
+        
+        guard let firstResult = results.first else {
+            DispatchQueue.main.async {
+                self.lprView.clearAllPlates()
+            }
+            return
+        }
+        
+        let plateRect = VNImageRectForNormalizedRect(firstResult.boundingBox,
+                                                       Int(bufferSize.width),
+                                                       Int(bufferSize.height))
+        
+        let licensePlate = LicensePlate(number: nil, lastRectInBuffer: plateRect)
+        
+        DispatchQueue.main.async {
+            self.lprView.showPlate(licensePlate)
+        }
     }
 }
 
