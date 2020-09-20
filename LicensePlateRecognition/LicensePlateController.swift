@@ -15,44 +15,31 @@ protocol LicensePlateControllerDelegate {
 class LicensePlateController {
     
     // MARK: - Public Properties
-    var visiblePlates: [LicensePlate] {
-        licensePlates.filter { $0.isVisible }
-    }
-    
+    private(set) var licensePlates: Set<LicensePlate> = []
     
     // MARK: - Private Properties
     
     /// Percentage that plates must overlap to be considered the same plate
-    private var licensePlates: [LicensePlate] = []
     private let overlapPercentage: CGFloat = 0.2
+    
+    /// Amount of time a license plate should persist after it's last appearance
     private let persistenceTime: TimeInterval = 0.2
     
     // MARK: - Public Methods
     
-    func update(withRects rects: [CGRect]) {
+    @discardableResult
+    func updateLicensePlates(withRects rects: [CGRect]) -> [LicensePlate] {
+
         // Update plates with rects
         rects.forEach { updateLicensePlate(forRect: $0) }
         
-        // Mark plates that haven't appeared in a while as not visible
+        // Remove plates that haven't appeared in a while
         let now = Date()
-        var indicesToMarkNotVisble: [Int] = []
+        licensePlates.subtract(
+            licensePlates.filter { $0.lastSeen.distance(to: now) > persistenceTime }
+        )
         
-        for (index, plate) in licensePlates.enumerated() {
-            if plate.lastSeen.distance(to: now) > persistenceTime {
-                indicesToMarkNotVisble.append(index)
-            }
-        }
-        
-        for index in indicesToMarkNotVisble {
-            var plate = licensePlates[index]
-            plate.isVisible = false
-            licensePlates[index] = plate
-        }
-        
-        // Remove plates not in visible plates that don't have numbers
-        licensePlates.removeAll {
-            !$0.isVisible && $0.number == nil
-        }
+        return Array(licensePlates.filter { $0.number == nil })
     }
     
     // MARK: - Private Methods
@@ -61,30 +48,22 @@ class LicensePlateController {
         let rectArea = rect.width * rect.height
         
         // Check for visible plate that overlaps rect by a percentage
-        var foundIndex: Int?
-        
-        for (index, plate) in visiblePlates.enumerated() {
+        for plate in Array(licensePlates) {
             let intersection = plate.lastRectInBuffer.intersection(rect)
             let intersectionArea = intersection.width * intersection.height
             
             if intersectionArea / rectArea > overlapPercentage {
-                // Found plate
-                foundIndex = index
-                break
+                // Found plate, update with new rect and date
+                guard var plateToUpdate = licensePlates.remove(plate) else { break }
+                plateToUpdate.lastRectInBuffer = rect
+                plateToUpdate.lastSeen = Date()
+                licensePlates.insert(plateToUpdate)
+                return
             }
-        }
-        
-        if let foundIndex = foundIndex {
-            // Update plate with new rect
-            var plate = licensePlates[foundIndex]
-            plate.lastRectInBuffer = rect
-            plate.lastSeen = Date()
-            licensePlates[foundIndex] = plate
-            return
         }
         
         // Otherwise make new plate
         let plate = LicensePlate(lastRectInBuffer: rect, lastSeen: Date())
-        licensePlates.append(plate)
+        licensePlates.insert(plate)
     }
 }

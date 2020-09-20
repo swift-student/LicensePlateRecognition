@@ -137,14 +137,14 @@ class LPRViewController: UIViewController {
             Int(bufferSize.height))
         }
         
-        licensePlateController.update(withRects: rects)
+        licensePlateController.updateLicensePlates(withRects: rects)
         
 //        let photoSettings = AVCapturePhotoSettings()
 //        photoSettings.isHighResolutionPhotoEnabled = true
 //        photoOutput.capturePhoto(with: photoSettings, delegate: self)
         
         DispatchQueue.main.async {
-            self.lprView.licensePlates = self.licensePlateController.visiblePlates
+            self.lprView.licensePlates = Array(self.licensePlateController.licensePlates)
         }
     }
 }
