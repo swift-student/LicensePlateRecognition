@@ -134,7 +134,7 @@ class LPRViewController: UIViewController {
         licensePlateController.update(withRects: rects)
         
         DispatchQueue.main.async {
-//            self.lprView.addPlate(licensePlate)
+            self.lprView.licensePlates = self.licensePlateController.visiblePlates
         }
     }
 }

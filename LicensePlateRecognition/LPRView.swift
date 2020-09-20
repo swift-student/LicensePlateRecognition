@@ -32,9 +32,44 @@ class LPRView: UIView {
         }
     }
     
+    var licensePlates: [LicensePlate] {
+        set {
+            guard let plateViews = detectionOverlay.subviews as? [LicensePlateView] else { return }
+            var platesToAdd = newValue
+            
+            for plateView in plateViews {
+                if let licensePlate = plateView.licensePlate,
+                    newValue.contains(licensePlate) {
+                    // Update
+                    platesToAdd.removeAll { $0 == licensePlate }
+                    plateView.licensePlate = licensePlate
+                    
+                    UIView.animate(withDuration: 0.05) {
+                        plateView.frame = licensePlate.lastRectInBuffer
+                    }
+                } else {
+                    // Remove
+                    plateView.removeFromSuperview()
+                }
+            }
+            
+            for plate in platesToAdd {
+                // Add
+                let plateView = LicensePlateView()
+                plateView.licensePlate = plate
+                plateView.frame = plate.lastRectInBuffer
+                detectionOverlay.addSubview(plateView)
+            }
+        }
+        
+        get {
+            guard let plateViews = detectionOverlay.subviews as? [LicensePlateView] else { return [] }
+            return plateViews.compactMap { $0.licensePlate }
+        }
+    }
+    
     // MARK: - Private Properties
     
-    private let boundingBox = UIView()
     private let detectionOverlay = UIView()
     
     // MARK: - Init
@@ -63,39 +98,11 @@ class LPRView: UIView {
         updateDetectionOverlayPosition()
     }
     
-    // MARK: - Public Methods
-
-    func showPlate(_ licensePlate: LicensePlate) {
-        let plateFrame = licensePlate.lastRectInBuffer
-
-        if !boundingBox.isHidden {
-            UIView.animate(withDuration: 0.1) {
-                self.updateBoxPosition(withPlateFrame: plateFrame)
-            }
-        } else {
-            boundingBox.isHidden = false
-        }
-    }
-    
-    func clearAllPlates() {
-        boundingBox.isHidden = true
-    }
-    
     // MARK: - Private Methods
     
     private func setUp() {
         detectionOverlay.frame = .zero
         addSubview(detectionOverlay)
-        
-        boundingBox.layer.borderColor = UIColor.red.cgColor
-        boundingBox.layer.borderWidth = 2.0
-        boundingBox.layer.cornerRadius = 6.0
-        
-        detectionOverlay.addSubview(boundingBox)
-    }
-    
-    private func updateBoxPosition(withPlateFrame plateFrame: CGRect) {
-        boundingBox.frame = plateFrame
     }
     
     private func updateDetectionOverlayPosition() {
@@ -114,7 +121,7 @@ class LPRView: UIView {
             // Expand to fill and reverse y axis (video y is opposite of UI)
             detectionOverlay.transform = .init(scaleX: 1.0 * scale, y: -1.0 * scale)
         } else {
-            // Do the above, scale y to match x and vice versa, and rotate 90º
+            // Do the above, scale y to match x and vicr-versa, and rotate 90º
             detectionOverlay.transform =
                 CGAffineTransform(
                     scaleX: -1.0 * scale * bufferAspectRatio,

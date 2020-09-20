@@ -10,12 +10,16 @@ import UIKit
 
 class LicensePlateController {
     
+    // MARK: - Public Properties
     private(set) var visiblePlates: [LicensePlate] = []
-    
     var licensePlates: [LicensePlate] = []
     
+    // MARK: - Private Properties
+    
     /// Percentage that plates must overlap to be considered the same plate
-    private let overlapPercentage: CGFloat = 0.5
+    private let overlapPercentage: CGFloat = 0.2
+    
+    // MARK: - Public Methods
     
     func update(withRects rects: [CGRect]) {
         visiblePlates.removeAll()
@@ -27,18 +31,31 @@ class LicensePlateController {
         }
     }
     
-    func licensePlate(forRect rect: CGRect) -> LicensePlate {
+    // MARK: - Private Methods
+    
+    private func licensePlate(forRect rect: CGRect) -> LicensePlate {
         let rectArea = rect.width * rect.height
         
         // Check for plate that overlaps rect by a percentage
-        for plate in licensePlates {
+        var foundIndex: Int?
+        
+        for (index, plate) in licensePlates.enumerated() {
             let intersection = plate.lastRectInBuffer.intersection(rect)
             let intersectionArea = intersection.width * intersection.height
             
             if intersectionArea / rectArea > overlapPercentage {
                 // Found plate
-                return plate
+                foundIndex = index
+                break
             }
+        }
+        
+        if let foundIndex = foundIndex {
+            // Update plate with new rect and return
+            var plate = licensePlates[foundIndex]
+            plate.lastRectInBuffer = rect
+            licensePlates[foundIndex] = plate
+            return plate
         }
         
         // Otherwise make new plate
@@ -47,7 +64,4 @@ class LicensePlateController {
         
         return plate
     }
-    
-    
-    
 }
