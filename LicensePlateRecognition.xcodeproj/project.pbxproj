@@ -20,6 +20,8 @@
 		04CE18C62516A11500D9CA4E /* LicensePlate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C52516A11500D9CA4E /* LicensePlate.swift */; };
 		04CE18C82516A1AD00D9CA4E /* LicensePlateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C72516A1AD00D9CA4E /* LicensePlateController.swift */; };
 		04CE18CA251716F100D9CA4E /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C9251716F100D9CA4E /* BoundingBoxView.swift */; };
+		04CE18CE2517E68700D9CA4E /* SSConcurrentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18CC2517E68700D9CA4E /* SSConcurrentOperation.m */; };
+		04CE18D12517EA0900D9CA4E /* CapturePhotoOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18D02517EA0900D9CA4E /* CapturePhotoOperation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,10 @@
 		04CE18C52516A11500D9CA4E /* LicensePlate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensePlate.swift; sourceTree = "<group>"; };
 		04CE18C72516A1AD00D9CA4E /* LicensePlateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensePlateController.swift; sourceTree = "<group>"; };
 		04CE18C9251716F100D9CA4E /* BoundingBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxView.swift; sourceTree = "<group>"; };
+		04CE18CB2517E68700D9CA4E /* LicensePlateRecognition-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LicensePlateRecognition-Bridging-Header.h"; sourceTree = "<group>"; };
+		04CE18CC2517E68700D9CA4E /* SSConcurrentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSConcurrentOperation.m; sourceTree = "<group>"; };
+		04CE18CD2517E68700D9CA4E /* SSConcurrentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSConcurrentOperation.h; sourceTree = "<group>"; };
+		04CE18D02517EA0900D9CA4E /* CapturePhotoOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturePhotoOperation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +105,8 @@
 				04CE18C52516A11500D9CA4E /* LicensePlate.swift */,
 				04CE18C72516A1AD00D9CA4E /* LicensePlateController.swift */,
 				04CE18BA25164BC700D9CA4E /* OrientationExtensions.swift */,
+				04CE18CF2517E6C000D9CA4E /* Operations */,
+				04CE18CB2517E68700D9CA4E /* LicensePlateRecognition-Bridging-Header.h */,
 			);
 			path = LicensePlateRecognition;
 			sourceTree = "<group>";
@@ -123,6 +131,16 @@
 				04C4E5E12516482D00A2BD8F /* Info.plist */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		04CE18CF2517E6C000D9CA4E /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				04CE18CD2517E68700D9CA4E /* SSConcurrentOperation.h */,
+				04CE18CC2517E68700D9CA4E /* SSConcurrentOperation.m */,
+				04CE18D02517EA0900D9CA4E /* CapturePhotoOperation.swift */,
+			);
+			path = Operations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -175,6 +193,7 @@
 				TargetAttributes = {
 					04C4E5CF2516482A00A2BD8F = {
 						CreatedOnToolsVersion = 11.6;
+						LastSwiftMigration = 1160;
 					};
 					04C4E5E52516482D00A2BD8F = {
 						CreatedOnToolsVersion = 11.6;
@@ -226,8 +245,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04CE18CE2517E68700D9CA4E /* SSConcurrentOperation.m in Sources */,
 				04CE18BD2516509800D9CA4E /* LicensePlateDetector.mlmodel in Sources */,
 				04CE18CA251716F100D9CA4E /* BoundingBoxView.swift in Sources */,
+				04CE18D12517EA0900D9CA4E /* CapturePhotoOperation.swift in Sources */,
 				04C4E5D42516482A00A2BD8F /* AppDelegate.swift in Sources */,
 				04CE18C325166FA500D9CA4E /* LPRView.swift in Sources */,
 				04CE18C62516A11500D9CA4E /* LicensePlate.swift in Sources */,
@@ -394,6 +415,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 94ZMA2MYR4;
 				INFOPLIST_FILE = LicensePlateRecognition/App/Info.plist;
@@ -403,6 +425,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiftstudent.LicensePlateRecognition;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LicensePlateRecognition/LicensePlateRecognition-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -412,6 +436,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 94ZMA2MYR4;
 				INFOPLIST_FILE = LicensePlateRecognition/App/Info.plist;
@@ -421,6 +446,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiftstudent.LicensePlateRecognition;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "LicensePlateRecognition/LicensePlateRecognition-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -133,20 +133,26 @@ class LPRViewController: UIViewController {
     private func processResults(_ results: [VNRecognizedObjectObservation]) {
         let rects = results.map {
             VNImageRectForNormalizedRect($0.boundingBox,
-            Int(bufferSize.width),
-            Int(bufferSize.height))
+                                         Int(bufferSize.width),
+                                         Int(bufferSize.height))
         }
         
-        licensePlateController.updateLicensePlates(withRects: rects)
+        let platesToGetNumbersFor = licensePlateController.updateLicensePlates(withRects: rects)
         
-//        let photoSettings = AVCapturePhotoSettings()
-//        photoSettings.isHighResolutionPhotoEnabled = true
-//        photoOutput.capturePhoto(with: photoSettings, delegate: self)
+        if !platesToGetNumbersFor.isEmpty {
+            let captureOperation = CapturePhotoOperation()
+            queue.addOperation(captureOperation)
+            let photoSettings = AVCapturePhotoSettings()
+            photoSettings.isHighResolutionPhotoEnabled = true
+            photoOutput.capturePhoto(with: photoSettings, delegate: captureOperation)
+        }
         
         DispatchQueue.main.async {
             self.lprView.licensePlates = Array(self.licensePlateController.licensePlates)
         }
     }
+    
+    private let queue = OperationQueue()
 }
 
 // MARK: - Video Data Output Delegate
@@ -173,18 +179,5 @@ extension LPRViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
                        didDrop didDropSampleBuffer: CMSampleBuffer,
                        from connection: AVCaptureConnection) {
         // print("frame dropped")
-    }
-}
-
-extension LPRViewController: AVCapturePhotoCaptureDelegate {
-    func photoOutput(_ output: AVCapturePhotoOutput,
-                     didFinishProcessingPhoto photo: AVCapturePhoto,
-                     error: Error?) {
-        if let error = error {
-            print(error)
-            return
-        }
-        
-        print(photo.cgImageRepresentation())
     }
 }
