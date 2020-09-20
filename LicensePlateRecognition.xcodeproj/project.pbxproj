@@ -22,6 +22,8 @@
 		04CE18CA251716F100D9CA4E /* BoundingBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18C9251716F100D9CA4E /* BoundingBoxView.swift */; };
 		04CE18CE2517E68700D9CA4E /* SSConcurrentOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18CC2517E68700D9CA4E /* SSConcurrentOperation.m */; };
 		04CE18D12517EA0900D9CA4E /* CapturePhotoOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18D02517EA0900D9CA4E /* CapturePhotoOperation.swift */; };
+		04CE18D3251804C400D9CA4E /* ReadPlateNumberOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18D2251804C400D9CA4E /* ReadPlateNumberOperation.swift */; };
+		04CE18D5251804EE00D9CA4E /* RecognizeTextOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04CE18D4251804EE00D9CA4E /* RecognizeTextOperation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,8 @@
 		04CE18CC2517E68700D9CA4E /* SSConcurrentOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSConcurrentOperation.m; sourceTree = "<group>"; };
 		04CE18CD2517E68700D9CA4E /* SSConcurrentOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSConcurrentOperation.h; sourceTree = "<group>"; };
 		04CE18D02517EA0900D9CA4E /* CapturePhotoOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturePhotoOperation.swift; sourceTree = "<group>"; };
+		04CE18D2251804C400D9CA4E /* ReadPlateNumberOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadPlateNumberOperation.swift; sourceTree = "<group>"; };
+		04CE18D4251804EE00D9CA4E /* RecognizeTextOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizeTextOperation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,7 +142,9 @@
 			children = (
 				04CE18CD2517E68700D9CA4E /* SSConcurrentOperation.h */,
 				04CE18CC2517E68700D9CA4E /* SSConcurrentOperation.m */,
+				04CE18D2251804C400D9CA4E /* ReadPlateNumberOperation.swift */,
 				04CE18D02517EA0900D9CA4E /* CapturePhotoOperation.swift */,
+				04CE18D4251804EE00D9CA4E /* RecognizeTextOperation.swift */,
 			);
 			path = Operations;
 			sourceTree = "<group>";
@@ -249,11 +255,13 @@
 				04CE18BD2516509800D9CA4E /* LicensePlateDetector.mlmodel in Sources */,
 				04CE18CA251716F100D9CA4E /* BoundingBoxView.swift in Sources */,
 				04CE18D12517EA0900D9CA4E /* CapturePhotoOperation.swift in Sources */,
+				04CE18D5251804EE00D9CA4E /* RecognizeTextOperation.swift in Sources */,
 				04C4E5D42516482A00A2BD8F /* AppDelegate.swift in Sources */,
 				04CE18C325166FA500D9CA4E /* LPRView.swift in Sources */,
 				04CE18C62516A11500D9CA4E /* LicensePlate.swift in Sources */,
 				04CE18C82516A1AD00D9CA4E /* LicensePlateController.swift in Sources */,
 				04CE18BF251652FE00D9CA4E /* LPRViewController.swift in Sources */,
+				04CE18D3251804C400D9CA4E /* ReadPlateNumberOperation.swift in Sources */,
 				04CE18BB25164BC700D9CA4E /* OrientationExtensions.swift in Sources */,
 				04C4E5D62516482A00A2BD8F /* SceneDelegate.swift in Sources */,
 			);

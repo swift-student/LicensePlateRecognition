@@ -9,6 +9,8 @@
 import AVFoundation
 
 class CapturePhotoOperation: ConcurrentOperation, AVCapturePhotoCaptureDelegate {
+    var cgImage: CGImage?
+    
     func photoOutput(_ output: AVCapturePhotoOutput,
                      didFinishProcessingPhoto photo: AVCapturePhoto,
                      error: Error?) {
@@ -19,6 +21,11 @@ class CapturePhotoOperation: ConcurrentOperation, AVCapturePhotoCaptureDelegate 
             return
         }
         
-        print(photo.cgImageRepresentation().debugDescription)
+        guard let image = photo.cgImageRepresentation()?.takeUnretainedValue() else {
+            return
+        }
+        
+        cgImage = image
     }
 }
+

@@ -139,12 +139,19 @@ class LPRViewController: UIViewController {
         
         let platesToGetNumbersFor = licensePlateController.updateLicensePlates(withRects: rects)
         
-        if !platesToGetNumbersFor.isEmpty {
-            let captureOperation = CapturePhotoOperation()
-            queue.addOperation(captureOperation)
+        if let firstPlate = platesToGetNumbersFor.first, queue.operationCount == 0 {
+            let rect = firstPlate.lastRectInBuffer
+            let regionOfInterest = CGRect(x: rect.minX / bufferSize.width,
+                                          y: rect.minY / bufferSize.height,
+                                          width: rect.width / bufferSize.width,
+                                          height: rect.height / bufferSize.height)
+            let readPlateNumberOperation = ReadPlateNumberOperation(region: regionOfInterest)
+            
+            queue.addOperation(readPlateNumberOperation)
             let photoSettings = AVCapturePhotoSettings()
             photoSettings.isHighResolutionPhotoEnabled = true
-            photoOutput.capturePhoto(with: photoSettings, delegate: captureOperation)
+            photoOutput.capturePhoto(with: photoSettings,
+                                     delegate: readPlateNumberOperation.capturePhotoOperation)
         }
         
         DispatchQueue.main.async {
