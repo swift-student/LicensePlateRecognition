@@ -39,14 +39,14 @@ class LPRView: UIView {
             
             for boundingBox in boundingBoxes {
                 if let licensePlate = boundingBox.licensePlate,
-                    newValue.contains(licensePlate) {
                     // Update
-                    platesToAdd.removeAll { $0 == licensePlate }
-                    boundingBox.licensePlate = licensePlate
-                    
-                    UIView.animate(withDuration: 0.05) {
+                    let index = platesToAdd.firstIndex(of: licensePlate) {
+                    boundingBox.licensePlate = platesToAdd[index]
+                   
+                    UIView.animate(withDuration: 0.1) {
                         boundingBox.frame = licensePlate.lastRectInBuffer
                     }
+                    platesToAdd.remove(at: index)
                 } else {
                     // Remove
                     boundingBox.removeFromSuperview()
