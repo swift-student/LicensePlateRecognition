@@ -34,37 +34,37 @@ class LPRView: UIView {
     
     var licensePlates: [LicensePlate] {
         set {
-            guard let plateViews = detectionOverlay.subviews as? [LicensePlateView] else { return }
+            guard let boundingBoxes = detectionOverlay.subviews as? [BoundingBoxView] else { return }
             var platesToAdd = newValue
             
-            for plateView in plateViews {
-                if let licensePlate = plateView.licensePlate,
+            for boundingBox in boundingBoxes {
+                if let licensePlate = boundingBox.licensePlate,
                     newValue.contains(licensePlate) {
                     // Update
                     platesToAdd.removeAll { $0 == licensePlate }
-                    plateView.licensePlate = licensePlate
+                    boundingBox.licensePlate = licensePlate
                     
                     UIView.animate(withDuration: 0.05) {
-                        plateView.frame = licensePlate.lastRectInBuffer
+                        boundingBox.frame = licensePlate.lastRectInBuffer
                     }
                 } else {
                     // Remove
-                    plateView.removeFromSuperview()
+                    boundingBox.removeFromSuperview()
                 }
             }
             
             for plate in platesToAdd {
                 // Add
-                let plateView = LicensePlateView()
-                plateView.licensePlate = plate
-                plateView.frame = plate.lastRectInBuffer
-                detectionOverlay.addSubview(plateView)
+                let boundingBox = BoundingBoxView()
+                boundingBox.licensePlate = plate
+                boundingBox.frame = plate.lastRectInBuffer
+                detectionOverlay.addSubview(boundingBox)
             }
         }
         
         get {
-            guard let plateViews = detectionOverlay.subviews as? [LicensePlateView] else { return [] }
-            return plateViews.compactMap { $0.licensePlate }
+            guard let boundingBoxes = detectionOverlay.subviews as? [BoundingBoxView] else { return [] }
+            return boundingBoxes.compactMap { $0.licensePlate }
         }
     }
     

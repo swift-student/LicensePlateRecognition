@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LicensePlateView: UIView {
+class BoundingBoxView: UIView {
     var licensePlate: LicensePlate?
     
     override init(frame: CGRect) {
