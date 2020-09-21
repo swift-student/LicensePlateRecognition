@@ -11,17 +11,26 @@ import UIKit
 class LicensePlateController {
     
     // MARK: - Public Properties
-    private(set) var licensePlates: Set<LicensePlate> = []
+    
+    var licensePlates: [LicensePlate] {
+        queue.sync {
+            Array(plates)
+        }
+    }
     
     /// Returns plates that need numbers and have been tracked for over a certain time
     var licensePlatesWithoutNumbers: [LicensePlate] {
-        let now = Date()
-        return Array(licensePlates.filter {
-            $0.number == nil && $0.firstSeen.distance(to: now) > minTrackingTime
-        })
+        queue.sync {
+            let now = Date()
+            return Array(plates.filter {
+                $0.number == nil && $0.firstSeen.distance(to: now) > minTrackingTime
+            })
+        }
     }
     
     // MARK: - Private Properties
+    
+    private var plates: Set<LicensePlate> = []
     
     /// Make license plate controller thread-safe
     private let queue = DispatchQueue(label: "License Plate Controller Queue")
@@ -40,14 +49,14 @@ class LicensePlateController {
     /// haven't appeared for a certain time
     /// - Parameter rects: The rectangles of detected plates to update.
     func updateLicensePlates(withRects rects: [CGRect]) {
-        queue.sync {
+        queue.async {
             // Update plates with new rects
-            rects.forEach { updateLicensePlate(forRect: $0) }
+            rects.forEach { self.updateLicensePlate(forRect: $0) }
             
             // Remove plates that haven't appeared in a while
             let now = Date()
-            licensePlates.subtract(
-                licensePlates.filter { $0.lastSeen.distance(to: now) > persistenceTime }
+            self.plates.subtract(
+                self.plates.filter { $0.lastSeen.distance(to: now) > self.persistenceTime }
             )
         }
     }
@@ -57,10 +66,10 @@ class LicensePlateController {
     ///   - number: The string to add as the license plate number.
     ///   - licensePlate: The license plate to modify.
     func addNumber(_ number: String, to licensePlate: LicensePlate) {
-        queue.sync {
-            guard var plateToUpdate = licensePlates.remove(licensePlate) else { return }
+        queue.async {
+            guard var plateToUpdate = self.plates.remove(licensePlate) else { return }
             plateToUpdate.number = number
-            licensePlates.insert(plateToUpdate)
+            self.plates.insert(plateToUpdate)
         }
     }
     
@@ -70,16 +79,16 @@ class LicensePlateController {
         let rectArea = rect.width * rect.height
         
         // Check for visible plate that overlaps rect by a percentage
-        for plate in Array(licensePlates) {
+        for plate in Array(plates) {
             let intersection = plate.lastRectInBuffer.intersection(rect)
             let intersectionArea = intersection.width * intersection.height
             
             if intersectionArea / rectArea > overlapPercentage {
                 // Found plate, update with new rect and date
-                guard var plateToUpdate = licensePlates.remove(plate) else { break }
+                guard var plateToUpdate = plates.remove(plate) else { break }
                 plateToUpdate.lastRectInBuffer = rect
                 plateToUpdate.lastSeen = Date()
-                licensePlates.insert(plateToUpdate)
+                plates.insert(plateToUpdate)
                 return
             }
         }
@@ -87,6 +96,6 @@ class LicensePlateController {
         // Otherwise make new plate
         let now = Date()
         let plate = LicensePlate(lastRectInBuffer: rect, firstSeen: now, lastSeen: now)
-        licensePlates.insert(plate)
+        plates.insert(plate)
     }
 }

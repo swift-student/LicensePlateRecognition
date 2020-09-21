@@ -142,8 +142,9 @@ class LPRViewController: UIViewController {
         
         licensePlateController.updateLicensePlates(withRects: rects)
         
+        // perform drawing on main thread
         DispatchQueue.main.async {
-            self.lprView.licensePlates = Array(self.licensePlateController.licensePlates)
+            self.lprView.licensePlates = self.licensePlateController.licensePlates
         }
         
         getPlateNumber()
