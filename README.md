@@ -1,5 +1,7 @@
 This project uses machine learning and computer vision to detect license plates and recognize their numbers on an iPhone. It was created over a weekend as a first delve into this topic and Apple's CoreML and Vision frameworks. I had a blast learning more about this area, and am excited to continue exploring it more in the future!
 
+![demo](LPRTest2.gif)
+
 The first hurdle to tackle was detection of license plates. I started from scratch by recording video with license plates, extracting frames, and annotating the images with bounding boxes to train my object detection model. I used CreateML to process these images and annotations and was pleasantly surprised when it performed well with a test image, drawing a bounding box around the detected license plate.
 
 Next I had to figure out how to incorporate this model into an app. Apple has a sample CoreML app for detecting objects that was a great reference, combined with some previous AVFoundation projects I had done in the past at Lambda School. There was still much work to be done to get my app working in both landscape and portrait orientations and drawing bounding boxes correctly. Translating detected object rectangles to bounding boxes on the preview screen is trickier than it appears at first glance!
