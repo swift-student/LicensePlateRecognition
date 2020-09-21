@@ -145,7 +145,11 @@ class LPRViewController: UIViewController {
                                           y: rect.minY / bufferSize.height,
                                           width: rect.width / bufferSize.width,
                                           height: rect.height / bufferSize.height)
-            let readPlateNumberOperation = ReadPlateNumberOperation(region: regionOfInterest)
+            let readPlateNumberOperation = ReadPlateNumberOperation(region: regionOfInterest) { [weak self] number in
+                if let number = number {
+                    self?.licensePlateController.addNumber(number, to: firstPlate)
+                }
+            }
             
             queue.addOperation(readPlateNumberOperation)
             let photoSettings = AVCapturePhotoSettings()
