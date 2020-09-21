@@ -10,6 +10,7 @@ import UIKit
 
 struct LicensePlate {
     var lastRectInBuffer: CGRect
+    let firstSeen: Date
     var lastSeen: Date
     var number: String?
     let uuid = UUID()

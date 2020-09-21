@@ -13,8 +13,12 @@ class LicensePlateController {
     // MARK: - Public Properties
     private(set) var licensePlates: Set<LicensePlate> = []
     
+    /// Returns plates that need numbers and have been tracked for over a certain time
     var licensePlatesWithoutNumbers: [LicensePlate] {
-        Array(licensePlates.filter { $0.number == nil })
+        let now = Date()
+        return Array(licensePlates.filter {
+            $0.number == nil && $0.firstSeen.distance(to: now) > minTrackingTime
+        })
     }
     
     // MARK: - Private Properties
@@ -27,6 +31,8 @@ class LicensePlateController {
     
     /// Amount of time a license plate should persist after it's last appearance
     private let persistenceTime: TimeInterval = 0.4
+    
+    private let minTrackingTime: TimeInterval = 0.1
     
     // MARK: - Public Methods
     
@@ -79,7 +85,8 @@ class LicensePlateController {
         }
         
         // Otherwise make new plate
-        let plate = LicensePlate(lastRectInBuffer: rect, lastSeen: Date())
+        let now = Date()
+        let plate = LicensePlate(lastRectInBuffer: rect, firstSeen: now, lastSeen: now)
         licensePlates.insert(plate)
     }
 }

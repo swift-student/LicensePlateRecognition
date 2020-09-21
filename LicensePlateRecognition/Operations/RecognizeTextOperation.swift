@@ -17,6 +17,7 @@ class RecognizeTextOperation: ConcurrentOperation {
     private var request: VNRecognizeTextRequest!
     
     private let allowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    private let minHeight: CGFloat = 0.25
     
     init(cgImage: CGImage, region: CGRect) {
         self.cgImage = cgImage
@@ -50,29 +51,38 @@ class RecognizeTextOperation: ConcurrentOperation {
         
         let candidates = results.compactMap { $0.topCandidates(1).first }
         
-        // Sort candidates by largest text size to smallest
-        let sortedCandidates = candidates.sorted { c1, c2 -> Bool in
-            guard let box1 = try? c1.boundingBox(for: c1.string.startIndex..<c1.string.endIndex) else {
+        // Only consider text over a certain height
+        let filteredCandidates = candidates.filter {
+            guard let box = try? $0.boundingBox(for: $0.string.startIndex..<$0.string.endIndex) else {
                 return false
             }
-            guard let box2 = try? c1.boundingBox(for: c2.string.startIndex..<c2.string.endIndex) else {
-                return false
-            }
-
-            let c1Height = box1.bottomLeft.y - box1.topLeft.y
-            let c2Height = box2.bottomLeft.y - box2.topLeft.y
             
-            return c1Height < c2Height
+            let height = box.topLeft.y - box.bottomLeft.y
+            return height > minHeight
         }
         
-        // Grab the largest candidate (avoids smaller text), filter it to only
-        // uppercase numbers and letters, and see if it is 5 to 8 characters long
-        // which would be valid for a license plate.
-        guard let largestCandidate = sortedCandidates.first else { return }
-        let filteredNumber = largestCandidate.string.filter { allowedCharacters.contains($0) }
+        // Sort text left to right
+        var sortedCandidates = filteredCandidates.sorted {
+            guard let box1 = try? $0.boundingBox(for: $0.string.startIndex..<$0.string.endIndex),
+                let box2 = try? $1.boundingBox(for: $1.string.startIndex..<$1.string.endIndex) else {
+                return false
+            }
+            
+            return box1.bottomLeft.x < box2.bottomLeft.x
+        }
         
-        if (5...8).contains(filteredNumber.count) {
-            recognizedText = filteredNumber
+        // Try to append candidates to make number that is 5 to 8 characters long
+        var number = ""
+        
+        while number.count < 8 && !sortedCandidates.isEmpty {
+            let nextCandidate = sortedCandidates.removeLast()
+            let nextNumber = nextCandidate.string.filter { allowedCharacters.contains($0) }
+            number.append(nextNumber)
+            
+            if (5...8).contains(number.count) {
+                recognizedText = number
+                return
+            }
         }
     }
 }
