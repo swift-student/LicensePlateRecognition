@@ -101,16 +101,11 @@
 		04C4E5D22516482A00A2BD8F /* LicensePlateRecognition */ = {
 			isa = PBXGroup;
 			children = (
-				04CE18C42516820800D9CA4E /* App */,
-				04C4E5D92516482A00A2BD8F /* Main.storyboard */,
-				04CE18BE251652FE00D9CA4E /* LPRViewController.swift */,
-				04CE18C225166FA500D9CA4E /* LPRView.swift */,
-				04CE18C9251716F100D9CA4E /* BoundingBoxView.swift */,
-				04CE18C52516A11500D9CA4E /* LicensePlate.swift */,
-				04CE18C72516A1AD00D9CA4E /* LicensePlateController.swift */,
-				04CE18BA25164BC700D9CA4E /* OrientationExtensions.swift */,
+				04CE18D72518479900D9CA4E /* LPR */,
+				04CE18D8251847BE00D9CA4E /* Model */,
 				04CE18CF2517E6C000D9CA4E /* Operations */,
-				04CE18CB2517E68700D9CA4E /* LicensePlateRecognition-Bridging-Header.h */,
+				04CE18D62518478100D9CA4E /* Helpers */,
+				04CE18C42516820800D9CA4E /* App */,
 			);
 			path = LicensePlateRecognition;
 			sourceTree = "<group>";
@@ -127,6 +122,7 @@
 		04CE18C42516820800D9CA4E /* App */ = {
 			isa = PBXGroup;
 			children = (
+				04CE18CB2517E68700D9CA4E /* LicensePlateRecognition-Bridging-Header.h */,
 				04C4E5D32516482A00A2BD8F /* AppDelegate.swift */,
 				04C4E5D52516482A00A2BD8F /* SceneDelegate.swift */,
 				04C4E5DC2516482D00A2BD8F /* Assets.xcassets */,
@@ -147,6 +143,34 @@
 				04CE18D4251804EE00D9CA4E /* RecognizeTextOperation.swift */,
 			);
 			path = Operations;
+			sourceTree = "<group>";
+		};
+		04CE18D62518478100D9CA4E /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				04CE18BA25164BC700D9CA4E /* OrientationExtensions.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		04CE18D72518479900D9CA4E /* LPR */ = {
+			isa = PBXGroup;
+			children = (
+				04C4E5D92516482A00A2BD8F /* Main.storyboard */,
+				04CE18BE251652FE00D9CA4E /* LPRViewController.swift */,
+				04CE18C225166FA500D9CA4E /* LPRView.swift */,
+				04CE18C9251716F100D9CA4E /* BoundingBoxView.swift */,
+			);
+			path = LPR;
+			sourceTree = "<group>";
+		};
+		04CE18D8251847BE00D9CA4E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				04CE18C72516A1AD00D9CA4E /* LicensePlateController.swift */,
+				04CE18C52516A11500D9CA4E /* LicensePlate.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -433,7 +457,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiftstudent.LicensePlateRecognition;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "LicensePlateRecognition/LicensePlateRecognition-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "LicensePlateRecognition/App/LicensePlateRecognition-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -454,7 +478,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.swiftstudent.LicensePlateRecognition;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "LicensePlateRecognition/LicensePlateRecognition-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "LicensePlateRecognition/App/LicensePlateRecognition-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

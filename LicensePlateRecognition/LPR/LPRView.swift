@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 
+/// Displays live video preview of camera as well as license plate detection overlays.
 class LPRView: UIView {
     
     // MARK: - Public Properties
@@ -26,12 +27,15 @@ class LPRView: UIView {
         set { videoPlayerView.session = newValue }
     }
     
+    /// The CGSize of the video buffer used for detecting plates
     var bufferSize: CGSize? {
         didSet {
             setNeedsLayout()
         }
     }
     
+    /// The license plates to be displayed. Set this array of plates to update
+    /// the detection overlays on-screen.
     var licensePlates: [LicensePlate] {
         set {
             guard let boundingBoxes = detectionOverlay.subviews as? [BoundingBoxView] else { return }

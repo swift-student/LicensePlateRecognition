@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol LicensePlateControllerDelegate {
-    func numberForLicensePlate(_ licensePlate: LicensePlate) -> String?
-}
-
 class LicensePlateController {
     
     // MARK: - Public Properties
     private(set) var licensePlates: Set<LicensePlate> = []
+    
+    var licensePlatesWithoutNumbers: [LicensePlate] {
+        Array(licensePlates.filter { $0.number == nil })
+    }
     
     // MARK: - Private Properties
     
@@ -23,17 +23,19 @@ class LicensePlateController {
     private let queue = DispatchQueue(label: "License Plate Controller Queue")
     
     /// Percentage that plates must overlap to be considered the same plate
-    private let overlapPercentage: CGFloat = 0.2
+    private let overlapPercentage: CGFloat = 0.3
     
     /// Amount of time a license plate should persist after it's last appearance
-    private let persistenceTime: TimeInterval = 0.3
+    private let persistenceTime: TimeInterval = 0.4
     
     // MARK: - Public Methods
     
-    @discardableResult
-    func updateLicensePlates(withRects rects: [CGRect]) -> [LicensePlate] {
+    /// Updates the license plates with the rects passed in, removing any plates that
+    /// haven't appeared for a certain time
+    /// - Parameter rects: The rectangles of detected plates to update.
+    func updateLicensePlates(withRects rects: [CGRect]) {
         queue.sync {
-            // Update plates with rects
+            // Update plates with new rects
             rects.forEach { updateLicensePlate(forRect: $0) }
             
             // Remove plates that haven't appeared in a while
@@ -41,11 +43,13 @@ class LicensePlateController {
             licensePlates.subtract(
                 licensePlates.filter { $0.lastSeen.distance(to: now) > persistenceTime }
             )
-            
-            return Array(licensePlates.filter { $0.number == nil })
         }
     }
     
+    /// Adds a license plate number to a license plate object.
+    /// - Parameters:
+    ///   - number: The string to add as the license plate number.
+    ///   - licensePlate: The license plate to modify.
     func addNumber(_ number: String, to licensePlate: LicensePlate) {
         queue.sync {
             guard var plateToUpdate = licensePlates.remove(licensePlate) else { return }

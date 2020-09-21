@@ -20,6 +20,7 @@ extension LicensePlate: Equatable {
         lhs.uuid == rhs.uuid
     }
 }
+
 extension LicensePlate: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)

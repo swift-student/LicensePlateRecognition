@@ -22,12 +22,15 @@ class LPRViewController: UIViewController {
     
     private let captureSession = AVCaptureSession()
     private let videoDataOutput = AVCaptureVideoDataOutput()
-    private let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutput", qos: .userInitiated, attributes: [], autoreleaseFrequency: .workItem)
+    private let videoDataOutputQueue = DispatchQueue(label: "VideoDataOutput",
+                                                     qos: .userInitiated,
+                                                     attributes: [],
+                                                     autoreleaseFrequency: .workItem)
     private let photoOutput = AVCapturePhotoOutput()
-    
     private var requests = [VNRequest]()
-    
+    private let readPlateNumberQueue = OperationQueue()
     private let licensePlateController = LicensePlateController()
+    
     
     // MARK: - View Lifecycle
     
@@ -137,33 +140,42 @@ class LPRViewController: UIViewController {
                                          Int(bufferSize.height))
         }
         
-        let platesToGetNumbersFor = licensePlateController.updateLicensePlates(withRects: rects)
-        
-        if let firstPlate = platesToGetNumbersFor.first, queue.operationCount == 0 {
-            let rect = firstPlate.lastRectInBuffer
-            let regionOfInterest = CGRect(x: rect.minX / bufferSize.width,
-                                          y: rect.minY / bufferSize.height,
-                                          width: rect.width / bufferSize.width,
-                                          height: rect.height / bufferSize.height)
-            let readPlateNumberOperation = ReadPlateNumberOperation(region: regionOfInterest) { [weak self] number in
-                if let number = number {
-                    self?.licensePlateController.addNumber(number, to: firstPlate)
-                }
-            }
-            
-            queue.addOperation(readPlateNumberOperation)
-            let photoSettings = AVCapturePhotoSettings()
-            photoSettings.isHighResolutionPhotoEnabled = true
-            photoOutput.capturePhoto(with: photoSettings,
-                                     delegate: readPlateNumberOperation.capturePhotoOperation)
-        }
+        licensePlateController.updateLicensePlates(withRects: rects)
         
         DispatchQueue.main.async {
             self.lprView.licensePlates = Array(self.licensePlateController.licensePlates)
         }
+        
+        getPlateNumber()
     }
     
-    private let queue = OperationQueue()
+    /// If there aren't any operations currently going, attempt to get the plate number
+    /// for the first plate without a number in the license plate controller.
+    private func getPlateNumber() {
+        guard let firstPlate = licensePlateController.licensePlatesWithoutNumbers.first,
+            readPlateNumberQueue.operationCount == 0 else {
+                return
+        }
+        
+        let rect = firstPlate.lastRectInBuffer
+        let regionOfInterest = CGRect(x: rect.minX / bufferSize.width,
+                                      y: rect.minY / bufferSize.height,
+                                      width: rect.width / bufferSize.width,
+                                      height: rect.height / bufferSize.height)
+        
+        let readPlateNumberOperation = ReadPlateNumberOperation(region: regionOfInterest)
+        { [weak self] number in
+            if let number = number {
+                self?.licensePlateController.addNumber(number, to: firstPlate)
+            }
+        }
+        
+        readPlateNumberQueue.addOperation(readPlateNumberOperation)
+        let photoSettings = AVCapturePhotoSettings()
+        photoSettings.isHighResolutionPhotoEnabled = true
+        photoOutput.capturePhoto(with: photoSettings,
+                                 delegate: readPlateNumberOperation.capturePhotoOperation)
+    }
 }
 
 // MARK: - Video Data Output Delegate

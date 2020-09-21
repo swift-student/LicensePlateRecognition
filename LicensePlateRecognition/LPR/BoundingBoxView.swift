@@ -69,6 +69,6 @@ class BoundingBoxView: UIView {
         guard let licensePlate = licensePlate else { return }
         
         numberLabel.text = licensePlate.number
-        numberLabel.transform = .init(scaleX: 1, y: -1)
+        numberLabel.transform = .init(scaleX: 1, y: -1) // invert y so it's right-side-up
     }
 }
