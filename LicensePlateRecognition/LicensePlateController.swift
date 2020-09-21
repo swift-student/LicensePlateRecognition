@@ -19,27 +19,39 @@ class LicensePlateController {
     
     // MARK: - Private Properties
     
+    /// Make license plate controller thread-safe
+    private let queue = DispatchQueue(label: "License Plate Controller Queue")
+    
     /// Percentage that plates must overlap to be considered the same plate
     private let overlapPercentage: CGFloat = 0.2
     
     /// Amount of time a license plate should persist after it's last appearance
-    private let persistenceTime: TimeInterval = 0.2
+    private let persistenceTime: TimeInterval = 0.3
     
     // MARK: - Public Methods
     
     @discardableResult
     func updateLicensePlates(withRects rects: [CGRect]) -> [LicensePlate] {
-
-        // Update plates with rects
-        rects.forEach { updateLicensePlate(forRect: $0) }
-        
-        // Remove plates that haven't appeared in a while
-        let now = Date()
-        licensePlates.subtract(
-            licensePlates.filter { $0.lastSeen.distance(to: now) > persistenceTime }
-        )
-        
-        return Array(licensePlates.filter { $0.number == nil })
+        queue.sync {
+            // Update plates with rects
+            rects.forEach { updateLicensePlate(forRect: $0) }
+            
+            // Remove plates that haven't appeared in a while
+            let now = Date()
+            licensePlates.subtract(
+                licensePlates.filter { $0.lastSeen.distance(to: now) > persistenceTime }
+            )
+            
+            return Array(licensePlates.filter { $0.number == nil })
+        }
+    }
+    
+    func addNumber(_ number: String, to licensePlate: LicensePlate) {
+        queue.sync {
+            guard var plateToUpdate = licensePlates.remove(licensePlate) else { return }
+            plateToUpdate.number = number
+            licensePlates.insert(plateToUpdate)
+        }
     }
     
     // MARK: - Private Methods
